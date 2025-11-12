@@ -1,25 +1,30 @@
 import prisma from "@/lib/prisma";
+import { requireAuth } from "@/lib/authMiddleware";
 
-export async function GET(req) {
-  const { searchParams } = new URL(req.url);
-  const userId = parseInt(searchParams.get("userId"));
+import { NextRequest, NextResponse } from "next/server";
 
-  if (!userId) return Response.json({ error: "userId required" }, { status: 400 });
+
+export async function GET(req : NextRequest) {
+  const user = await requireAuth(req);
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const spendings = await prisma.spending.findMany({
-    where: { userId },
+    where: { userId: user.id },
     orderBy: { date: "desc" },
   });
 
-  return Response.json(spendings);
+  return NextResponse.json(spendings);
 }
 
-export async function POST(req) {
-  const { amount, category, userId } = await req.json();
+export async function POST(req : NextRequest) {
+  const user = await requireAuth(req);
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { amount, category } = await req.json();
 
   const spending = await prisma.spending.create({
-    data: { amount, category, userId },
+    data: { amount, category, userId: user.id },
   });
 
-  return Response.json(spending);
+  return NextResponse.json(spending);
 }
