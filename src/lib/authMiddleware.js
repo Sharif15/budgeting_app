@@ -1,4 +1,4 @@
-import { verifyToken } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 
 export async function requireAuth(req) {
   const authHeader = req.headers.get("authorization");

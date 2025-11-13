@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { requireAuth } from "@/lib/authMiddleware";
+import { requireAuth } from "@/lib/auth";
 
 import { NextRequest, NextResponse } from "next/server";
 
