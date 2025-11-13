@@ -2,20 +2,20 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import SpendingHistory from "../../_components/SpendingHistory"; // adjust path if needed
+import IncomeHistory from "../../_components/IncomeHistory"; // adjust path if needed
 
-export default function SpendingPage() {
+export default function IncomePage() {
   const router = useRouter();
-  const [spendingData, setSpendingData] = useState<any[]>([]);
+  const [incomeData, setIncomeData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchSpending() {
+    async function fetchIncome() {
       try {
-        const res = await fetch("/api/spending", { credentials: "include" });
+        const res = await fetch("/api/income", { credentials: "include" });
         if (!res.ok) throw new Error("Unauthorized");
         const data = await res.json();
-        setSpendingData(data);
+        setIncomeData(data);
       } catch (err) {
         console.error(err);
         router.push("/login");
@@ -24,17 +24,17 @@ export default function SpendingPage() {
       }
     }
 
-    fetchSpending();
+    fetchIncome();
   }, [router]);
 
-  if (loading) return <div className="text-center mt-20">Loading spending...</div>;
+  if (loading) return <div className="text-center mt-20">Loading income...</div>;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
-        <SpendingHistory
-          items={spendingData}
-          onAddClick={() => router.push("/spending/add")}
+        <IncomeHistory 
+          items={incomeData} 
+          onAddClick={() => router.push("/income/add")} 
         />
 
         <button
